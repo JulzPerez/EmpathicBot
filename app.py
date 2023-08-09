@@ -2,10 +2,14 @@ import random
 import sys
 from flask import Flask, render_template, request, session, redirect, url_for,flash
 
+'''
 from transformers import AutoTokenizer, AutoModelWithLMHead, pipeline
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
 model = AutoModelWithLMHead.from_pretrained("julietoperez/gpt2-ft-ael")
 
+'''
+from huggingface_hub import InferenceClient
+client = InferenceClient(model="jeppy20/gpt2-ft-ael", token="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")
 
 app = Flask(__name__)
 
@@ -19,14 +23,19 @@ if __name__=='__main__':
 
 def getPromptCompletion(prompt):
 
-    fine_tuned_model = pipeline('text-generation', model=model, tokenizer=tokenizer, max_new_tokens=100)
-    res = fine_tuned_model(prompt)
+    res_inf = client.text_generation(prompt, max_new_tokens=50)
+    res_inf = res_inf.strip('"')
     
-    res = res[0]['generated_text'].strip(prompt)
-    print(res)
-    
-    return res
+    result = ''
+    res_inf = res_inf.split('.')
 
+    for i in range(1,len(res_inf)):
+        result += res_inf[i].strip('"') + ". "
+   
+   
+    print(result)
+    
+    return result.strip("Teacher:")
 
 def chatbot_response(msg):
     res = getPromptCompletion(msg)
