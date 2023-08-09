@@ -2,10 +2,6 @@ import random
 import sys
 from flask import Flask, render_template, request, session, redirect, url_for,flash
 
-import os
-import pandas as pd
-import numpy as np
-
 from transformers import AutoTokenizer, AutoModelWithLMHead, pipeline
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
 model = AutoModelWithLMHead.from_pretrained("julietoperez/gpt2-ft-ael")
@@ -23,12 +19,9 @@ if __name__=='__main__':
 
 def getPromptCompletion(prompt):
 
-    #prompt = "Im really struggling with this math concept. I just can't seem to understand it."
     fine_tuned_model = pipeline('text-generation', model=model, tokenizer=tokenizer, max_new_tokens=100)
     res = fine_tuned_model(prompt)
-    #print(res[0]['generated_text'])
-
-
+    
     res = res[0]['generated_text'].strip(prompt)
     print(res)
     
