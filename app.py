@@ -1,9 +1,7 @@
 import random
 import sys
 from flask import Flask, render_template, request, session, redirect, url_for,flash
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-import openai
+
 import os
 import pandas as pd
 import numpy as np
@@ -17,25 +15,9 @@ app = Flask(__name__)
 
 app.config.update(SECRET_KEY='osd(99092=36&462134kjKDhuIS_d23',
                   ENV='development')
-app.config.from_pyfile('config.py')
-openai.api_key = os.environ["OPENAI_API_KEY"]
-
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-class Statement(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    statement_text = db.Column(db.Text, nullable=False)
-    question = db.Column(db.Text,nullable=False)
-    ans_style_1 = db.Column(db.Text,nullable=False)
-    ans_style_2 = db.Column(db.Text,nullable=False)
-    ans_style_3 = db.Column(db.Text,nullable=False)
-    ans_style_4 = db.Column(db.Text,nullable=False)
-    responses = db.relationship('UserResponse', backref='statement', lazy=True)
-
 
 if __name__=='__main__':
-    db.create_all()
+   
     app.run()
 
 
